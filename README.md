@@ -1,6 +1,11 @@
 # GFK  
 
 Games for Kids written with Hexi and Transcrypt  
-You can read the latest news here : http://artyprog.blogspot.fr/search/label/GFK
+
+List of Games
+
+* [Memory](https://rawgit.com/artyprog/GFK/master/halloffame/memory.html). This game is playable, but not yet finished, missing intro, music, sounds, end and the colors are badly choosed. 
+
+
 
 

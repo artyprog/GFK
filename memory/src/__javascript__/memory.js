@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-06-27 06:51:35
+// Transcrypt'ed from Python, 2016-06-27 21:33:55
 function memory () {
 	var __all__ = {};
 	var __world__ = __all__;
@@ -1460,36 +1460,7 @@ function memory () {
 	};
 	__all__.__call__ = __call__;
 
-	__nest__ (
-		__all__,
-		'itertools', {
-			__all__: {
-				__inited__: false,
-				__init__: function (__all__) {
-					var chain = function () {
-						var args = [] .slice.apply (arguments);
-						var result = [];
-						for (var index = 0; index < args.length; index++) {
-							result = result.concat (args [index]);
-						}
-						return list (result);
-					}
-
-					var miter = function() {
-						return "ITER";
-					}
-					//<all>
-					__all__.chain = chain;
-					__all__.miter = miter;
-					//</all>
-				}
-			}
-		}
-	);
 	(function () {
-		var itertools = {};
-		__nest__ (itertools, '', __init__ (__world__.itertools));
-		console.log (itertools.miter ());
 		var rgb2hex = JS.rgb2hex;
 		var color1 = rgb2hex ('rgba(255,0,0,0)');
 		var color2 = rgb2hex ('rgba(255,255,0,0)');
@@ -1514,7 +1485,6 @@ function memory () {
 			return __accu0__;
 		} ();
 		JS.shuffle (allcolors);
-		var thingsToLoad = list (['sounds/music.wav', 'sounds/bounce.wav']);
 		var all = function (iterable) {
 			var __iter0__ = iterable;
 			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
@@ -1576,7 +1546,7 @@ function memory () {
 					var __left0__ = tuple ([num % self.cols, Math.floor (num / self.rows)]);
 					var i = __left0__ [0];
 					var j = __left0__ [1];
-					var __left0__ = tuple ([j * (128 + self.offset), i * (128 + self.offset)]);
+					var __left0__ = tuple ([i * (128 + self.offset), j * (128 + self.offset)]);
 					var posx = __left0__ [0];
 					var posy = __left0__ [1];
 					var sprite = self.game.rectangle (128, 128, color);
@@ -1603,17 +1573,14 @@ function memory () {
 					var height = 512;
 				};
 				self.game = hexi (width, height, self.setup);
-				self.game.backgroundColor = '#ffffff';
+				self.game.backgroundColor = '#898999';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
 				self.curcell = null;
-				self.counter = -(1);
-				self.comparator = list ([]);
-				self.tapped = true;
+				self.clickedcells = list ([]);
 			});},
 			get tap () {return __get__ (this, function (self) {
-				bounce.play ();
 				self.tapped = true;
 			});},
 			get setup () {return __get__ (this, function (self) {
@@ -1631,47 +1598,43 @@ function memory () {
 					}
 				}
 			});},
-			get inc_counter () {return __get__ (this, function (self) {
-				self.counter++;
-				if (self.counter > 1) {
-					self.counter = 0;
-					self.comparator = list ([]);
+			get compare_cells () {return __get__ (this, function (self) {
+				if (len (self.clickedcells) < 2) {
+					return ;
 				}
-			});},
-			get check_comparator () {return __get__ (this, function (self) {
 				var numrows = self.grid.rows;
 				var numcols = self.grid.cols;
 				var resetcell = function (cells) {
 					var _reset = function () {
 						cells [0].alpha = 1;
 						cells [1].alpha = 1;
+						self.clickedcells = list ([]);
 					};
 					return _reset;
 				};
-				if (len (self.comparator) > 1) {
-					var __left0__ = tuple ([self.comparator [0], self.comparator [1]]);
-					var cella = __left0__ [0];
-					var cellb = __left0__ [1];
-					if (cella.num != cellb.num) {
-						var __left0__ = tuple ([cella.num % numcols, Math.floor (cella.num / numrows)]);
-						var icella = __left0__ [0];
-						var jcella = __left0__ [1];
-						var __left0__ = tuple ([cellb.num % numcols, Math.floor (cellb.num / numrows)]);
-						var icellb = __left0__ [0];
-						var jcellb = __left0__ [1];
-						var spritea = self.grid.spr [icella] [jcella];
-						var spriteb = self.grid.spr [icellb] [jcellb];
-						var contenta = spritea.content;
-						var contentb = spriteb.content;
-						cellb.alpha = 0;
-						cella.alpha = 0;
-						if (contenta != contentb) {
-							setTimeout (resetcell (list ([cella, cellb])), 1000);
-						}
-						else {
-							spritea.showed = true;
-							spriteb.showed = true;
-						}
+				var __left0__ = self.clickedcells.__getslice__ (0, 2, 1);
+				var cella = __left0__ [0];
+				var cellb = __left0__ [1];
+				if (cella.num != cellb.num) {
+					var __left0__ = tuple ([cella.num % numcols, Math.floor (cella.num / numrows)]);
+					var icella = __left0__ [0];
+					var jcella = __left0__ [1];
+					var __left0__ = tuple ([cellb.num % numcols, Math.floor (cellb.num / numrows)]);
+					var icellb = __left0__ [0];
+					var jcellb = __left0__ [1];
+					var spritea = self.grid.spr [icella] [jcella];
+					var spriteb = self.grid.spr [icellb] [jcellb];
+					var contenta = spritea.content;
+					var contentb = spriteb.content;
+					cellb.alpha = 0;
+					cella.alpha = 0;
+					if (contenta != contentb) {
+						setTimeout (resetcell (list ([cella, cellb])), 500);
+					}
+					else {
+						spritea.showed = true;
+						spriteb.showed = true;
+						self.clickedcells = list ([]);
 					}
 				}
 			});},
@@ -1711,25 +1674,24 @@ function memory () {
 				self.check_endgame ();
 				self.get_curcell ();
 				if (self.mouse.tapped) {
-					self.inc_counter ();
-					self.comparator [self.counter] = self.curcell;
+					var lc = len (self.clickedcells);
+					if (lc >= 2) {
+						alert ('TOO FAST');
+					}
+					self.clickedcells.append (self.curcell);
 					self.mouse.tapped = false;
-					self.check_comparator ();
+					self.compare_cells ();
 				}
 			});},
 			get start () {return __get__ (this, function (self) {
 				self.game.start ();
 			});},
 			get end () {return __get__ (this, function (self) {
-				self.game.backgroundColor = 'seagreen';
 				console.log ('END');
 			});}
 		});
 		var memory = Memory ();
 		memory.start ();
-		__pragma__ ('<use>' +
-			'itertools' +
-		'</use>')
 		__pragma__ ('<all>')
 			__all__.Grid = Grid;
 			__all__.Memory = Memory;
@@ -1746,7 +1708,6 @@ function memory () {
 			__all__.colors = colors;
 			__all__.memory = memory;
 			__all__.rgb2hex = rgb2hex;
-			__all__.thingsToLoad = thingsToLoad;
 		__pragma__ ('</all>')
 	}) ();
 	return __all__;

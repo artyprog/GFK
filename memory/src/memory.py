@@ -1,8 +1,5 @@
-import itertools
-
-
-
-console.log(itertools.miter())
+# memory.py
+# This file is translated to Javascript using Transcrypt
 
 rgb2hex = JS.rgb2hex
 color1 = rgb2hex("rgba(255,0,0,0)")
@@ -18,16 +15,12 @@ colors = [color1,color2, color3, color4, color5, color6, color7, color8]
 allcolors = [color for  tuplecolor in zip(colors, colors) for color in tuplecolor]
 JS.shuffle(allcolors)
 
-
-thingsToLoad = ["sounds/music.wav", "sounds/bounce.wav"];
-
 # Helper Functions:
 def all(iterable):
     for element in iterable:
         if not element:
             return False
     return True
-
 
 # Main Grid wich contents all the cells
 # Grille principale contenant les cellules
@@ -48,7 +41,7 @@ class Grid:
         for num in cells:
             color = allcolors[num]
             i, j = num % self.cols, num // self.rows
-            posx, posy  = j *(128  + self.offset ), i * (128  + self.offset ) 
+            posx, posy  = i *(128  + self.offset ), j * (128  + self.offset ) 
 
             # FrontFace : Sprite or Color
             sprite = self.game.rectangle(128, 128, color)
@@ -66,31 +59,23 @@ class Grid:
             self.ligs[i][j] = rectb
             self.spr[i][j] = sprite
 
+
 # Game Handler
 # Gestion du Jeu                                     
 class Memory:
     def __init__(self, width=512, height=512):
         self.game = hexi(width, height, self.setup)
-        self.game.backgroundColor = "#ffffff"
-     
+        self.game.backgroundColor = "#898999"
         self.mouse = self.game.pointer
         self.mouse.tap = self.tap
         self.grid = Grid(self.game)
         self.curcell = None
-        self.counter = -1
-        self.comparator = []
-        self.tapped = True
-
+        self.clickedcells = []
 
     def tap(self):
-        bounce.play();
         self.tapped = True
 
-    def setup(self):
-        #self.music = self.game.sound("sounds/music.wav");
-        #self.tapsound = self.game.sound("sounds/bounce.wav");
-        #self.music.loop = True        
-
+    def setup(self):        
         self.game.scaleToWindow("seaGreen")
         self.grid.display() 
         self.game.state = self.play
@@ -102,13 +87,11 @@ class Memory:
                 if(self.game.hit(self.game.pointer, curcell)):
                     self.curcell = curcell      
 
-    def inc_counter(self):
-        self.counter += 1
-        if self.counter > 1:
-            self.counter = 0
-            self.comparator = []
+    def compare_cells(self):
 
-    def check_comparator(self):
+        if len(self.clickedcells) < 2:
+            return
+
         numrows = self.grid.rows
         numcols = self.grid.cols 
 
@@ -116,24 +99,25 @@ class Memory:
             def _reset():
                 cells[0].alpha = 1
                 cells[1].alpha = 1
+                self.clickedcells = []
             return _reset 
 
-        if len(self.comparator) > 1:
-            cella, cellb = self.comparator[0], self.comparator[1]
-            if (cella.num != cellb.num ):                
-                    icella, jcella = cella.num % numcols, cella.num // numrows
-                    icellb, jcellb = cellb.num % numcols, cellb.num // numrows
-                    spritea = self.grid.spr[icella][jcella]
-                    spriteb  = self.grid.spr[icellb][jcellb]
-                    contenta = spritea.content 
-                    contentb = spriteb.content                     
-                    cellb.alpha = 0
-                    cella.alpha = 0                     
-                    if (contenta != contentb):
-                        setTimeout(resetcell([cella, cellb]), 1000)
-                    else:
-                        spritea.showed = True
-                        spriteb.showed = True
+        cella, cellb = self.clickedcells[:2]
+        if (cella.num != cellb.num ):                
+                icella, jcella = cella.num % numcols, cella.num // numrows
+                icellb, jcellb = cellb.num % numcols, cellb.num // numrows
+                spritea = self.grid.spr[icella][jcella]
+                spriteb  = self.grid.spr[icellb][jcellb]
+                contenta = spritea.content 
+                contentb = spriteb.content                     
+                cellb.alpha = 0
+                cella.alpha = 0                     
+                if (contenta != contentb):
+                    setTimeout(resetcell([cella, cellb]), 500)
+                else:
+                    spritea.showed = True
+                    spriteb.showed = True
+                    self.clickedcells = []
 
 
     def check_endgame(self):
@@ -144,23 +128,24 @@ class Memory:
         if (all(showed_values)):
             for s in lst_spr:
                 s.alpha = 0
-            self.game.state = self.end
+            self.game.state = self.end 
 
     def play(self):
-        #if (not self.music.playing): self.music.play();
         self.check_endgame()     
         self.get_curcell()
-        if (self.mouse.tapped):
-            self.inc_counter()
-            self.comparator[self.counter] = self.curcell
+
+        if (self.mouse.tapped): 
+            lc = len(self.clickedcells)
+            if (lc >= 2):
+                alert("TOO FAST")
+            self.clickedcells.append(self.curcell)           
             self.mouse.tapped = False
-            self.check_comparator()
+            self.compare_cells()
 
     def start(self):
         self.game.start()
 
     def end(self):
-        self.game.backgroundColor = "seagreen"
         console.log("END")
 
 memory = Memory()

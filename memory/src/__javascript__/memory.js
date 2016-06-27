@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-06-27 21:33:55
+// Transcrypt'ed from Python, 2016-06-27 22:26:49
 function memory () {
 	var __all__ = {};
 	var __world__ = __all__;
@@ -1675,9 +1675,6 @@ function memory () {
 				self.get_curcell ();
 				if (self.mouse.tapped) {
 					var lc = len (self.clickedcells);
-					if (lc >= 2) {
-						alert ('TOO FAST');
-					}
 					self.clickedcells.append (self.curcell);
 					self.mouse.tapped = false;
 					self.compare_cells ();

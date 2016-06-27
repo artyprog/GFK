@@ -213,9 +213,6 @@
 				self.get_curcell ();
 				if (self.mouse.tapped) {
 					var lc = len (self.clickedcells);
-					if (lc >= 2) {
-						alert ('TOO FAST');
-					}
 					self.clickedcells.append (self.curcell);
 					self.mouse.tapped = false;
 					self.compare_cells ();

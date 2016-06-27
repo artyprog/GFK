@@ -136,8 +136,6 @@ class Memory:
 
         if (self.mouse.tapped): 
             lc = len(self.clickedcells)
-            if (lc >= 2):
-                alert("TOO FAST")
             self.clickedcells.append(self.curcell)           
             self.mouse.tapped = False
             self.compare_cells()

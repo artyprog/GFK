@@ -1705,43 +1705,24 @@ file: Module
 												ctx: Load 
 										keywords: list 
 								element: Expr 
-									value: IfExp 
-										test: Compare 
-											left: Attribute 
+									value: Call 
+										func: Attribute 
+											value: Attribute 
+												value: Name 
+													id: str = self
+													ctx: Load 
+												attr: str = clickedcells
+												ctx: Load 
+											attr: str = append
+											ctx: Load 
+										args: list 
+											element: Attribute 
 												value: Name 
 													id: str = self
 													ctx: Load 
 												attr: str = curcell
 												ctx: Load 
-											ops: list 
-												element: NotIn 
-											comparators: list 
-												element: Attribute 
-													value: Name 
-														id: str = self
-														ctx: Load 
-													attr: str = clickedcells
-													ctx: Load 
-										body: Call 
-											func: Attribute 
-												value: Attribute 
-													value: Name 
-														id: str = self
-														ctx: Load 
-													attr: str = clickedcells
-													ctx: Load 
-												attr: str = append
-												ctx: Load 
-											args: list 
-												element: Attribute 
-													value: Name 
-														id: str = self
-														ctx: Load 
-													attr: str = curcell
-													ctx: Load 
-											keywords: list 
-										orelse: NameConstant 
-											value: NoneType = None
+										keywords: list 
 								element: Assign 
 									targets: list 
 										element: Attribute 

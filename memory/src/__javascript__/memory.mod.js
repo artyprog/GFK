@@ -213,7 +213,7 @@
 				self.get_curcell ();
 				if (self.mouse.tapped) {
 					var lc = len (self.clickedcells);
-					(!__in__ (self.curcell, self.clickedcells) ? self.clickedcells.append (self.curcell) : null);
+					self.clickedcells.append (self.curcell);
 					self.mouse.tapped = false;
 					self.compare_cells ();
 				}

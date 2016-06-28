@@ -136,7 +136,7 @@ class Memory:
 
         if (self.mouse.tapped): 
             lc = len(self.clickedcells)
-            self.clickedcells.append(self.curcell) if self.curcell not in self.clickedcells else None        
+            self.clickedcells.append(self.curcell)         
             self.mouse.tapped = False
             self.compare_cells()
 

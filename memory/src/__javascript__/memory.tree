@@ -828,7 +828,7 @@ file: Module
 									attr: str = backgroundColor
 									ctx: Store 
 							value: Str 
-								s: str = #898999
+								s: str = seagrean
 						element: Assign 
 							targets: list 
 								element: Attribute 
@@ -1490,7 +1490,7 @@ file: Module
 																ctx: Load 
 														keywords: list 
 													element: Num 
-														n: int = 500
+														n: int = 1000
 												keywords: list 
 									orelse: list 
 										element: Assign 
@@ -1687,42 +1687,44 @@ file: Module
 								attr: str = tapped
 								ctx: Load 
 							body: list 
-								element: Assign 
-									targets: list 
-										element: Name 
-											id: str = lc
-											ctx: Store 
-									value: Call 
-										func: Name 
-											id: str = len
-											ctx: Load 
-										args: list 
-											element: Attribute 
-												value: Name 
-													id: str = self
-													ctx: Load 
-												attr: str = clickedcells
-												ctx: Load 
-										keywords: list 
 								element: Expr 
-									value: Call 
-										func: Attribute 
-											value: Attribute 
-												value: Name 
-													id: str = self
-													ctx: Load 
-												attr: str = clickedcells
-												ctx: Load 
-											attr: str = append
-											ctx: Load 
-										args: list 
-											element: Attribute 
+									value: IfExp 
+										test: Compare 
+											left: Attribute 
 												value: Name 
 													id: str = self
 													ctx: Load 
 												attr: str = curcell
 												ctx: Load 
-										keywords: list 
+											ops: list 
+												element: NotIn 
+											comparators: list 
+												element: Attribute 
+													value: Name 
+														id: str = self
+														ctx: Load 
+													attr: str = clickedcells
+													ctx: Load 
+										body: Call 
+											func: Attribute 
+												value: Attribute 
+													value: Name 
+														id: str = self
+														ctx: Load 
+													attr: str = clickedcells
+													ctx: Load 
+												attr: str = append
+												ctx: Load 
+											args: list 
+												element: Attribute 
+													value: Name 
+														id: str = self
+														ctx: Load 
+													attr: str = curcell
+													ctx: Load 
+											keywords: list 
+										orelse: NameConstant 
+											value: NoneType = None
 								element: Assign 
 									targets: list 
 										element: Attribute 

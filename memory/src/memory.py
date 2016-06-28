@@ -1,6 +1,3 @@
-# memory.py
-# This file is translated to Javascript using Transcrypt
-
 rgb2hex = JS.rgb2hex
 color1 = rgb2hex("rgba(255,0,0,0)")
 color2 = rgb2hex("rgba(255,255,0,0)")
@@ -15,12 +12,14 @@ colors = [color1,color2, color3, color4, color5, color6, color7, color8]
 allcolors = [color for  tuplecolor in zip(colors, colors) for color in tuplecolor]
 JS.shuffle(allcolors)
 
+
 # Helper Functions:
 def all(iterable):
     for element in iterable:
         if not element:
             return False
     return True
+
 
 # Main Grid wich contents all the cells
 # Grille principale contenant les cellules
@@ -41,7 +40,7 @@ class Grid:
         for num in cells:
             color = allcolors[num]
             i, j = num % self.cols, num // self.rows
-            posx, posy  = i *(128  + self.offset ), j * (128  + self.offset ) 
+            posx, posy  = i *(128  + self.offset ), j * (128  + self.offset )
 
             # FrontFace : Sprite or Color
             sprite = self.game.rectangle(128, 128, color)
@@ -51,7 +50,7 @@ class Grid:
             sprite.content  = color
             sprite.showed = False
 
-            # Backface 
+            # Backface
             rectb = self.game.rectangle(128, 128, "blue")
             rectb.x = posx
             rectb.y = posy
@@ -61,11 +60,11 @@ class Grid:
 
 
 # Game Handler
-# Gestion du Jeu                                     
+# Gestion du Jeu
 class Memory:
     def __init__(self, width=512, height=512):
         self.game = hexi(width, height, self.setup)
-        self.game.backgroundColor = "#898999"
+        self.game.backgroundColor = "seagrean"
         self.mouse = self.game.pointer
         self.mouse.tap = self.tap
         self.grid = Grid(self.game)
@@ -75,9 +74,9 @@ class Memory:
     def tap(self):
         self.tapped = True
 
-    def setup(self):        
+    def setup(self):
         self.game.scaleToWindow("seaGreen")
-        self.grid.display() 
+        self.grid.display()
         self.game.state = self.play
 
     def get_curcell(self):
@@ -85,7 +84,7 @@ class Memory:
             for j in range(self.grid.cols):
                 curcell = self.grid.ligs[i][j]
                 if(self.game.hit(self.game.pointer, curcell)):
-                    self.curcell = curcell      
+                    self.curcell = curcell
 
     def compare_cells(self):
 
@@ -93,27 +92,27 @@ class Memory:
             return
 
         numrows = self.grid.rows
-        numcols = self.grid.cols 
+        numcols = self.grid.cols
 
         def resetcell(cells):
             def _reset():
                 cells[0].alpha = 1
                 cells[1].alpha = 1
                 self.clickedcells = []
-            return _reset 
+            return _reset
 
         cella, cellb = self.clickedcells[:2]
-        if (cella.num != cellb.num ):                
+        if (cella.num != cellb.num ):
                 icella, jcella = cella.num % numcols, cella.num // numrows
                 icellb, jcellb = cellb.num % numcols, cellb.num // numrows
                 spritea = self.grid.spr[icella][jcella]
                 spriteb  = self.grid.spr[icellb][jcellb]
-                contenta = spritea.content 
-                contentb = spriteb.content                     
+                contenta = spritea.content
+                contentb = spriteb.content
                 cellb.alpha = 0
-                cella.alpha = 0                     
+                cella.alpha = 0
                 if (contenta != contentb):
-                    setTimeout(resetcell([cella, cellb]), 500)
+                    setTimeout(resetcell([cella, cellb]), 1000)
                 else:
                     spritea.showed = True
                     spriteb.showed = True
@@ -128,15 +127,14 @@ class Memory:
         if (all(showed_values)):
             for s in lst_spr:
                 s.alpha = 0
-            self.game.state = self.end 
+            self.game.state = self.end
 
     def play(self):
-        self.check_endgame()     
+        self.check_endgame()
         self.get_curcell()
 
-        if (self.mouse.tapped): 
-            lc = len(self.clickedcells)
-            self.clickedcells.append(self.curcell)         
+        if (self.mouse.tapped):
+            self.clickedcells.append(self.curcell) if self.curcell not in self.clickedcells else None
             self.mouse.tapped = False
             self.compare_cells()
 

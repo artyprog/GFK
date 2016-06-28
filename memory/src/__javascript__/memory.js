@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-06-28 12:07:15
+// Transcrypt'ed from Python, 2016-06-28 12:36:56
 function memory () {
 	var __all__ = {};
 	var __world__ = __all__;
@@ -1057,7 +1057,7 @@ function memory () {
 					var height = 512;
 				};
 				self.game = hexi (width, height, self.setup);
-				self.game.backgroundColor = '#898999';
+				self.game.backgroundColor = 'seagrean';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
@@ -1113,7 +1113,7 @@ function memory () {
 					cellb.alpha = 0;
 					cella.alpha = 0;
 					if (contenta != contentb) {
-						setTimeout (resetcell (list ([cella, cellb])), 500);
+						setTimeout (resetcell (list ([cella, cellb])), 1000);
 					}
 					else {
 						spritea.showed = true;
@@ -1158,8 +1158,7 @@ function memory () {
 				self.check_endgame ();
 				self.get_curcell ();
 				if (self.mouse.tapped) {
-					var lc = len (self.clickedcells);
-					self.clickedcells.append (self.curcell);
+					(!__in__ (self.curcell, self.clickedcells) ? self.clickedcells.append (self.curcell) : null);
 					self.mouse.tapped = false;
 					self.compare_cells ();
 				}

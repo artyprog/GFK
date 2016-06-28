@@ -1,14 +1,13 @@
 	(function () {
-		var rgb2hex = JS.rgb2hex;
-		var color1 = rgb2hex ('rgba(255,0,0,0)');
-		var color2 = rgb2hex ('rgba(255,255,0,0)');
-		var color3 = rgb2hex ('rgba(255,255,255,0)');
-		var color4 = rgb2hex ('rgba(255,0,255,0)');
-		var color5 = rgb2hex ('rgba(255,80,80,0)');
-		var color6 = rgb2hex ('rgba(255,128,0,0)');
-		var color7 = rgb2hex ('rgba(255,128,255,0)');
-		var color8 = rgb2hex ('rgba(255,0,128,0)');
-		var colors = list ([color1, color2, color3, color4, color5, color6, color7, color8]);
+		var colors = function () {
+			var __accu0__ = [];
+			var __iter0__ = list ([tuple ([0, 0, 0]), tuple ([0, 0, 255]), tuple ([0, 255, 0]), tuple ([0, 255, 255]), tuple ([255, 0, 0]), tuple ([255, 0, 255]), tuple ([255, 255, 0]), tuple ([255, 255, 255])]);
+			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
+				var color = __iter0__ [__index0__];
+				__accu0__.append (JS.rgb2hex ('rgba({}, 0)'.format (color)));
+			}
+			return __accu0__;
+		} ();
 		var allcolors = function () {
 			var __accu0__ = [];
 			var __iter0__ = zip (colors, colors);
@@ -93,7 +92,7 @@
 					sprite.num = num;
 					sprite.content = color;
 					sprite.showed = false;
-					var rectb = self.game.rectangle (128, 128, 'blue');
+					var rectb = self.game.rectangle (128, 128, 'lightGray');
 					rectb.x = posx;
 					rectb.y = posy;
 					rectb.num = num;
@@ -105,13 +104,13 @@
 		var Memory = __class__ ('Memory', [object], {
 			get __init__ () {return __get__ (this, function (self, width, height) {
 				if (typeof width == 'undefined' || (width != null && width .__class__ == __kwargdict__)) {;
-					var width = 512;
+					var width = 524;
 				};
 				if (typeof height == 'undefined' || (height != null && height .__class__ == __kwargdict__)) {;
-					var height = 512;
+					var height = 524;
 				};
 				self.game = hexi (width, height, self.setup);
-				self.game.backgroundColor = '#898999';
+				self.game.backgroundColor = 'seaGreen';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
@@ -153,7 +152,11 @@
 				var __left0__ = self.clickedcells.__getslice__ (0, 2, 1);
 				var cella = __left0__ [0];
 				var cellb = __left0__ [1];
-				if (cella.num != cellb.num) {
+				if (cella.num == cellb.num) {
+					self.clickedcells = self.clickedcells.__getslice__ (0, 1, 1);
+					return ;
+				}
+				else {
 					var __left0__ = tuple ([cella.num % numcols, Math.floor (cella.num / numrows)]);
 					var icella = __left0__ [0];
 					var jcella = __left0__ [1];
@@ -177,6 +180,14 @@
 				}
 			});},
 			get check_endgame () {return __get__ (this, function (self) {
+				var endgame = function () {
+					var __iter0__ = lst_spr;
+					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
+						var s = __iter0__ [__index0__];
+						s.alpha = 0;
+					}
+					self.game.state = self.end;
+				};
 				var lst_spr = function () {
 					var __accu0__ = [];
 					var __iter0__ = self.grid.spr;
@@ -200,12 +211,7 @@
 					return __accu0__;
 				} ();
 				if (all (showed_values)) {
-					var __iter0__ = lst_spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var s = __iter0__ [__index0__];
-						s.alpha = 0;
-					}
-					self.game.state = self.end;
+					setTimeout (endgame, 2000);
 				}
 			});},
 			get play () {return __get__ (this, function (self) {
@@ -232,16 +238,7 @@
 			__all__.Memory = Memory;
 			__all__.all = all;
 			__all__.allcolors = allcolors;
-			__all__.color1 = color1;
-			__all__.color2 = color2;
-			__all__.color3 = color3;
-			__all__.color4 = color4;
-			__all__.color5 = color5;
-			__all__.color6 = color6;
-			__all__.color7 = color7;
-			__all__.color8 = color8;
 			__all__.colors = colors;
 			__all__.memory = memory;
-			__all__.rgb2hex = rgb2hex;
 		__pragma__ ('</all>')
 	}) ();

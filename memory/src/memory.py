@@ -1,18 +1,18 @@
 # memory.py
 # This file is translated to Javascript using Transcrypt
 
-rgb2hex = JS.rgb2hex
-color1 = rgb2hex("rgba(255,0,0,0)")
-color2 = rgb2hex("rgba(255,255,0,0)")
-color3 = rgb2hex("rgba(255,255,255,0)")
-color4 = rgb2hex("rgba(255,0,255,0)")
-color5 = rgb2hex("rgba(255,80,80,0)")
-color6 = rgb2hex("rgba(255,128,0,0)")
-color7 = rgb2hex("rgba(255,128,255,0)")
-color8 = rgb2hex("rgba(255,0,128,0)")
+colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  [
+    (0, 0, 0),
+    (0, 0, 255),
+    (0, 255, 0),
+    (0, 255, 255),
+    (255, 0, 0),
+    (255, 0, 255),
+    (255, 255, 0),
+    (255, 255, 255)
+]]
 
-colors = [color1,color2, color3, color4, color5, color6, color7, color8]
-allcolors = [color for  tuplecolor in zip(colors, colors) for color in tuplecolor]
+allcolors = [color for tuplecolor in zip(colors, colors) for color in tuplecolor]
 JS.shuffle(allcolors)
 
 # Helper Functions:
@@ -52,7 +52,7 @@ class Grid:
             sprite.showed = False
 
             # Backface 
-            rectb = self.game.rectangle(128, 128, "blue")
+            rectb = self.game.rectangle(128, 128, "lightGray")
             rectb.x = posx
             rectb.y = posy
             rectb.num = num
@@ -63,9 +63,9 @@ class Grid:
 # Game Handler
 # Gestion du Jeu                                     
 class Memory:
-    def __init__(self, width=512, height=512):
+    def __init__(self, width=524, height=524):
         self.game = hexi(width, height, self.setup)
-        self.game.backgroundColor = "#898999"
+        self.game.backgroundColor = "seaGreen"
         self.mouse = self.game.pointer
         self.mouse.tap = self.tap
         self.grid = Grid(self.game)
@@ -84,7 +84,7 @@ class Memory:
         for i in range(self.grid.rows):
             for j in range(self.grid.cols):
                 curcell = self.grid.ligs[i][j]
-                if(self.game.hit(self.game.pointer, curcell)):
+                if self.game.hit(self.game.pointer, curcell):
                     self.curcell = curcell      
 
     def compare_cells(self):
@@ -103,38 +103,43 @@ class Memory:
             return _reset 
 
         cella, cellb = self.clickedcells[:2]
-        if (cella.num != cellb.num ):                
-                icella, jcella = cella.num % numcols, cella.num // numrows
-                icellb, jcellb = cellb.num % numcols, cellb.num // numrows
-                spritea = self.grid.spr[icella][jcella]
-                spriteb  = self.grid.spr[icellb][jcellb]
-                contenta = spritea.content 
-                contentb = spriteb.content                     
-                cellb.alpha = 0
-                cella.alpha = 0                     
-                if (contenta != contentb):
-                    setTimeout(resetcell([cella, cellb]), 500)
-                else:
-                    spritea.showed = True
-                    spriteb.showed = True
-                    self.clickedcells = []
-
-
+        if cella.num == cellb.num:
+            self.clickedcells = self.clickedcells [:1]
+            return
+        else:
+            icella, jcella = cella.num % numcols, cella.num // numrows
+            icellb, jcellb = cellb.num % numcols, cellb.num // numrows
+            spritea = self.grid.spr[icella][jcella]
+            spriteb  = self.grid.spr[icellb][jcellb]
+            contenta = spritea.content 
+            contentb = spriteb.content                     
+            cellb.alpha = 0
+            cella.alpha = 0                     
+            if contenta != contentb:
+                setTimeout(resetcell([cella, cellb]), 500)
+            else:
+                spritea.showed = True
+                spriteb.showed = True
+                self.clickedcells = []
+                
     def check_endgame(self):
+        def endgame ():
+            for s in lst_spr:
+                s.alpha = 0
+            self.game.state = self.end      
+        
         # flatten liste sprites
         # On 'applatit la liste des sprites'
         lst_spr = [sprite for liste_sprites in self.grid.spr for sprite in liste_sprites]
         showed_values = [s.showed for s in lst_spr]
-        if (all(showed_values)):
-            for s in lst_spr:
-                s.alpha = 0
-            self.game.state = self.end 
-
+        if all(showed_values):
+            setTimeout (endgame, 2000)
+ 
     def play(self):
         self.check_endgame()     
         self.get_curcell()
 
-        if (self.mouse.tapped): 
+        if self.mouse.tapped: 
             lc = len(self.clickedcells)
             self.clickedcells.append(self.curcell)           
             self.mouse.tapped = False
@@ -148,3 +153,4 @@ class Memory:
 
 memory = Memory()
 memory.start()
+

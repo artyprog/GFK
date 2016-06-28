@@ -3,150 +3,110 @@ file: Module
 		element: Assign 
 			targets: list 
 				element: Name 
-					id: str = rgb2hex
-					ctx: Store 
-			value: Attribute 
-				value: Name 
-					id: str = JS
-					ctx: Load 
-				attr: str = rgb2hex
-				ctx: Load 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color1
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,0,0,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color2
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,255,0,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color3
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,255,255,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color4
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,0,255,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color5
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,80,80,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color6
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,128,0,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color7
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,128,255,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
-					id: str = color8
-					ctx: Store 
-			value: Call 
-				func: Name 
-					id: str = rgb2hex
-					ctx: Load 
-				args: list 
-					element: Str 
-						s: str = rgba(255,0,128,0)
-				keywords: list 
-		element: Assign 
-			targets: list 
-				element: Name 
 					id: str = colors
 					ctx: Store 
-			value: List 
-				elts: list 
-					element: Name 
-						id: str = color1
+			value: ListComp 
+				elt: Call 
+					func: Attribute 
+						value: Name 
+							id: str = JS
+							ctx: Load 
+						attr: str = rgb2hex
 						ctx: Load 
-					element: Name 
-						id: str = color2
-						ctx: Load 
-					element: Name 
-						id: str = color3
-						ctx: Load 
-					element: Name 
-						id: str = color4
-						ctx: Load 
-					element: Name 
-						id: str = color5
-						ctx: Load 
-					element: Name 
-						id: str = color6
-						ctx: Load 
-					element: Name 
-						id: str = color7
-						ctx: Load 
-					element: Name 
-						id: str = color8
-						ctx: Load 
-				ctx: Load 
+					args: list 
+						element: Call 
+							func: Attribute 
+								value: Str 
+									s: str = rgba({}, 0)
+								attr: str = format
+								ctx: Load 
+							args: list 
+								element: Name 
+									id: str = color
+									ctx: Load 
+							keywords: list 
+					keywords: list 
+				generators: list 
+					element: comprehension 
+						target: Name 
+							id: str = color
+							ctx: Store 
+						iter: List 
+							elts: list 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 0
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 255
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 0
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 255
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 0
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 0
+										element: Num 
+											n: int = 255
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 0
+									ctx: Load 
+								element: Tuple 
+									elts: list 
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 255
+										element: Num 
+											n: int = 255
+									ctx: Load 
+							ctx: Load 
+						ifs: list 
 		element: Assign 
 			targets: list 
 				element: Name 
@@ -677,7 +637,7 @@ file: Module
 											element: Num 
 												n: int = 128
 											element: Str 
-												s: str = blue
+												s: str = lightGray
 										keywords: list 
 								element: Assign 
 									targets: list 
@@ -786,9 +746,9 @@ file: Module
 						kwarg: NoneType = None
 						defaults: list 
 							element: Num 
-								n: int = 512
+								n: int = 524
 							element: Num 
-								n: int = 512
+								n: int = 524
 					body: list 
 						element: Assign 
 							targets: list 
@@ -828,7 +788,7 @@ file: Module
 									attr: str = backgroundColor
 									ctx: Store 
 							value: Str 
-								s: str = seagrean
+								s: str = seaGreen
 						element: Assign 
 							targets: list 
 								element: Attribute 
@@ -1281,7 +1241,7 @@ file: Module
 									attr: str = num
 									ctx: Load 
 								ops: list 
-									element: NotEq 
+									element: Eq 
 								comparators: list 
 									element: Attribute 
 										value: Name 
@@ -1290,6 +1250,30 @@ file: Module
 										attr: str = num
 										ctx: Load 
 							body: list 
+								element: Assign 
+									targets: list 
+										element: Attribute 
+											value: Name 
+												id: str = self
+												ctx: Load 
+											attr: str = clickedcells
+											ctx: Store 
+									value: Subscript 
+										value: Attribute 
+											value: Name 
+												id: str = self
+												ctx: Load 
+											attr: str = clickedcells
+											ctx: Load 
+										slice: Slice 
+											lower: NoneType = None
+											upper: Num 
+												n: int = 1
+											step: NoneType = None
+										ctx: Load 
+								element: Return 
+									value: NoneType = None
+							orelse: list 
 								element: Assign 
 									targets: list 
 										element: Tuple 
@@ -1490,7 +1474,7 @@ file: Module
 																ctx: Load 
 														keywords: list 
 													element: Num 
-														n: int = 1000
+														n: int = 500
 												keywords: list 
 									orelse: list 
 										element: Assign 
@@ -1524,7 +1508,6 @@ file: Module
 											value: List 
 												elts: list 
 												ctx: Load 
-							orelse: list 
 					decorator_list: list 
 					returns: NoneType = None
 				element: FunctionDef 
@@ -1540,6 +1523,54 @@ file: Module
 						kwarg: NoneType = None
 						defaults: list 
 					body: list 
+						element: FunctionDef 
+							name: str = endgame
+							args: arguments 
+								args: list 
+								vararg: NoneType = None
+								kwonlyargs: list 
+								kw_defaults: list 
+								kwarg: NoneType = None
+								defaults: list 
+							body: list 
+								element: For 
+									target: Name 
+										id: str = s
+										ctx: Store 
+									iter: Name 
+										id: str = lst_spr
+										ctx: Load 
+									body: list 
+										element: Assign 
+											targets: list 
+												element: Attribute 
+													value: Name 
+														id: str = s
+														ctx: Load 
+													attr: str = alpha
+													ctx: Store 
+											value: Num 
+												n: int = 0
+									orelse: list 
+								element: Assign 
+									targets: list 
+										element: Attribute 
+											value: Attribute 
+												value: Name 
+													id: str = self
+													ctx: Load 
+												attr: str = game
+												ctx: Load 
+											attr: str = state
+											ctx: Store 
+									value: Attribute 
+										value: Name 
+											id: str = self
+											ctx: Load 
+										attr: str = end
+										ctx: Load 
+							decorator_list: list 
+							returns: NoneType = None
 						element: Assign 
 							targets: list 
 								element: Name 
@@ -1604,42 +1635,18 @@ file: Module
 										ctx: Load 
 								keywords: list 
 							body: list 
-								element: For 
-									target: Name 
-										id: str = s
-										ctx: Store 
-									iter: Name 
-										id: str = lst_spr
-										ctx: Load 
-									body: list 
-										element: Assign 
-											targets: list 
-												element: Attribute 
-													value: Name 
-														id: str = s
-														ctx: Load 
-													attr: str = alpha
-													ctx: Store 
-											value: Num 
-												n: int = 0
-									orelse: list 
-								element: Assign 
-									targets: list 
-										element: Attribute 
-											value: Attribute 
-												value: Name 
-													id: str = self
-													ctx: Load 
-												attr: str = game
-												ctx: Load 
-											attr: str = state
-											ctx: Store 
-									value: Attribute 
-										value: Name 
-											id: str = self
+								element: Expr 
+									value: Call 
+										func: Name 
+											id: str = setTimeout
 											ctx: Load 
-										attr: str = end
-										ctx: Load 
+										args: list 
+											element: Name 
+												id: str = endgame
+												ctx: Load 
+											element: Num 
+												n: int = 2000
+										keywords: list 
 							orelse: list 
 					decorator_list: list 
 					returns: NoneType = None
@@ -1687,44 +1694,42 @@ file: Module
 								attr: str = tapped
 								ctx: Load 
 							body: list 
+								element: Assign 
+									targets: list 
+										element: Name 
+											id: str = lc
+											ctx: Store 
+									value: Call 
+										func: Name 
+											id: str = len
+											ctx: Load 
+										args: list 
+											element: Attribute 
+												value: Name 
+													id: str = self
+													ctx: Load 
+												attr: str = clickedcells
+												ctx: Load 
+										keywords: list 
 								element: Expr 
-									value: IfExp 
-										test: Compare 
-											left: Attribute 
+									value: Call 
+										func: Attribute 
+											value: Attribute 
+												value: Name 
+													id: str = self
+													ctx: Load 
+												attr: str = clickedcells
+												ctx: Load 
+											attr: str = append
+											ctx: Load 
+										args: list 
+											element: Attribute 
 												value: Name 
 													id: str = self
 													ctx: Load 
 												attr: str = curcell
 												ctx: Load 
-											ops: list 
-												element: NotIn 
-											comparators: list 
-												element: Attribute 
-													value: Name 
-														id: str = self
-														ctx: Load 
-													attr: str = clickedcells
-													ctx: Load 
-										body: Call 
-											func: Attribute 
-												value: Attribute 
-													value: Name 
-														id: str = self
-														ctx: Load 
-													attr: str = clickedcells
-													ctx: Load 
-												attr: str = append
-												ctx: Load 
-											args: list 
-												element: Attribute 
-													value: Name 
-														id: str = self
-														ctx: Load 
-													attr: str = curcell
-													ctx: Load 
-											keywords: list 
-										orelse: NameConstant 
-											value: NoneType = None
+										keywords: list 
 								element: Assign 
 									targets: list 
 										element: Attribute 

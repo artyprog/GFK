@@ -27,7 +27,7 @@
 			var __iter0__ = iterable;
 			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
 				var element = __iter0__ [__index0__];
-				if (!(element)) {
+				if (!element) {
 					return false;
 				}
 			}
@@ -81,7 +81,7 @@
 				for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
 					var num = __iter0__ [__index0__];
 					var color = allcolors [num];
-					var __left0__ = tuple ([num % self.cols, Math.floor (num / self.rows)]);
+					var __left0__ = tuple ([num % self.cols, Math.floor (num) / Math.floor (self.rows)]);
 					var i = __left0__ [0];
 					var j = __left0__ [1];
 					var __left0__ = tuple ([i * (128 + self.offset), j * (128 + self.offset)]);
@@ -154,10 +154,10 @@
 				var cella = __left0__ [0];
 				var cellb = __left0__ [1];
 				if (cella.num != cellb.num) {
-					var __left0__ = tuple ([cella.num % numcols, Math.floor (cella.num / numrows)]);
+					var __left0__ = tuple ([cella.num % numcols, Math.floor (cella.num) / Math.floor (numrows)]);
 					var icella = __left0__ [0];
 					var jcella = __left0__ [1];
-					var __left0__ = tuple ([cellb.num % numcols, Math.floor (cellb.num / numrows)]);
+					var __left0__ = tuple ([cellb.num % numcols, Math.floor (cellb.num) / Math.floor (numrows)]);
 					var icellb = __left0__ [0];
 					var jcellb = __left0__ [1];
 					var spritea = self.grid.spr [icella] [jcella];
@@ -213,7 +213,7 @@
 				self.get_curcell ();
 				if (self.mouse.tapped) {
 					var lc = len (self.clickedcells);
-					self.clickedcells.append (self.curcell);
+					(!__in__ (self.curcell, self.clickedcells) ? self.clickedcells.append (self.curcell) : null);
 					self.mouse.tapped = false;
 					self.compare_cells ();
 				}

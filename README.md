@@ -1,6 +1,6 @@
 # GFK  
 
-Games for Kids written with Hexi and Transcrypt  
+Games for Kids written with [Hexi](https://github.com/kittykatattack/hexi) and [Transcrypt](http://transcrypt.org/)  
 
 All the games are self contained in one html file, you can 'save link as' and play offine.   
 The self contained html file is created with [standalone-html](https://github.com/jgm/standalone-html)

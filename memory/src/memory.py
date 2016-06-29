@@ -1,6 +1,10 @@
 # memory.py
+
 # Created by Salvatore aka artyprog on June 2016
-# Improved by Jacques de Hooge aka JdeH
+
+# Improvments by Jacques de Hooge aka JdeH
+# colors more distinct, if's without (), endresult stays visible for 2s
+
 # This file is translated to Javascript using Transcrypt
 
 colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  [

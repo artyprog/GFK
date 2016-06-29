@@ -1,6 +1,6 @@
 # memory.py
 # Created by Salvatore aka artyprog
-# Improved by Jacque de Hooge aka JdeH
+# Improved by Jacques de Hooge aka JdeH
 # This file is translated to Javascript using Transcrypt
 
 colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  [

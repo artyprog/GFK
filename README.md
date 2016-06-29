@@ -11,7 +11,7 @@ You can even create an 'apk' package for android with [intel-xdk](https://softwa
 
 List of Games (Use Chrome or Safari to play)    
 
-* [Memory](https://rawgit.com/artyprog/GFK/master/halloffame/memory.html). This game is playable (even on your smartphone), but not yet    finished, missing intro, music, sounds, end and the colors are badly choosen.  
+* [Memory](https://rawgit.com/artyprog/GFK/master/halloffame/memory.html). This game is playable (even on your smartphone), but not yet    finished, missing intro, music, sounds, end and the colors must be better choosen.  
 
 
 

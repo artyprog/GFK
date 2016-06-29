@@ -1,4 +1,6 @@
 # memory.py
+# Created by Salvatore aka artyprog
+# Improved by Jacque de Hooge aka JdeH
 # This file is translated to Javascript using Transcrypt
 
 colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  [
@@ -12,10 +14,13 @@ colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  [
     (255, 255, 255)
 ]]
 
+# Future version of Transcrypt will allow [allcolors] * 2
 allcolors = [color for tuplecolor in zip(colors, colors) for color in tuplecolor]
+
+# JS.* -> Javascript Functions
 JS.shuffle(allcolors)
 
-# Helper Functions:
+# Helper Functions
 def all(iterable):
     for element in iterable:
         if not element:
@@ -51,7 +56,7 @@ class Grid:
             sprite.content  = color
             sprite.showed = False
 
-            # Backface 
+            # Backface (Thanks JdeH)
             rectb = self.game.rectangle(128, 128, "lightGray")
             rectb.x = posx
             rectb.y = posy
@@ -64,6 +69,7 @@ class Grid:
 # Gestion du Jeu                                     
 class Memory:
     def __init__(self, width=524, height=524):
+        # Initialisation of the Game 
         self.game = hexi(width, height, self.setup)
         self.game.backgroundColor = "seaGreen"
         self.mouse = self.game.pointer
@@ -104,7 +110,7 @@ class Memory:
 
         cella, cellb = self.clickedcells[:2]
         if cella.num == cellb.num:
-            self.clickedcells = self.clickedcells [:1]
+            self.clickedcells = self.clickedcells [:1] #JdeH
             return
         else:
             icella, jcella = cella.num % numcols, cella.num // numrows
@@ -122,7 +128,7 @@ class Memory:
                 spriteb.showed = True
                 self.clickedcells = []
                 
-    def check_endgame(self):
+    def check_endgame(self): #JdeH
         def endgame ():
             for s in lst_spr:
                 s.alpha = 0
@@ -133,7 +139,7 @@ class Memory:
         lst_spr = [sprite for liste_sprites in self.grid.spr for sprite in liste_sprites]
         showed_values = [s.showed for s in lst_spr]
         if all(showed_values):
-            setTimeout (endgame, 2000)
+            setTimeout (endgame, 2000) #JdeH
  
     def play(self):
         self.check_endgame()     

@@ -1,5 +1,5 @@
 # memory.py
-# Created by Salvatore aka artyprog
+# Created by Salvatore aka artyprog on June 2016
 # Improved by Jacques de Hooge aka JdeH
 # This file is translated to Javascript using Transcrypt
 

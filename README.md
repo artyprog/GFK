@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+# GFK-DEV 
+=======
 # GFK  
+>>>>>>> master
 
 Games for Kids written with [Hexi](https://github.com/kittykatattack/hexi) and [Transcrypt](http://transcrypt.org/)  
 

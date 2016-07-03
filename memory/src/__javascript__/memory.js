@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-07-03 16:02:02
+// Transcrypt'ed from Python, 2016-07-03 16:28:35
 function memory () {
 	var __all__ = {};
 	var __world__ = __all__;
@@ -1657,13 +1657,6 @@ function memory () {
 			}
 			return true;
 		};
-		var counter = function* () {
-			var i = 0;
-			while (true) {
-				i++;
-				yield i;
-			}
-		};
 		var Grid = __class__ ('Grid', [object], {
 			get __init__ () {return __get__ (this, function (self, game, rows, cols) {
 				if (typeof rows == 'undefined' || (rows != null && rows .__class__ == __kwargdict__)) {;
@@ -1743,7 +1736,6 @@ function memory () {
 				};
 				self.game = hexi (width, height, self.setup);
 				self.game.backgroundColor = '#a4a4a4';
-				self.game.border = '24px red solid';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
@@ -1851,7 +1843,6 @@ function memory () {
 				self.check_endgame ();
 				self.get_curcell ();
 				if (self.mouse.tapped) {
-					var lc = len (self.clickedcells);
 					self.clickedcells.append (self.curcell);
 					self.mouse.tapped = false;
 					self.compare_cells ();
@@ -1875,7 +1866,6 @@ function memory () {
 			__all__.all = all;
 			__all__.allcolors = allcolors;
 			__all__.colors = colors;
-			__all__.counter = counter;
 			__all__.memory = memory;
 		__pragma__ ('</all>')
 	}) ();

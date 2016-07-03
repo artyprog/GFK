@@ -22,13 +22,6 @@
 			}
 			return true;
 		};
-		var counter = function* () {
-			var i = 0;
-			while (true) {
-				i++;
-				yield i;
-			}
-		};
 		var Grid = __class__ ('Grid', [object], {
 			get __init__ () {return __get__ (this, function (self, game, rows, cols) {
 				if (typeof rows == 'undefined' || (rows != null && rows .__class__ == __kwargdict__)) {;
@@ -108,7 +101,6 @@
 				};
 				self.game = hexi (width, height, self.setup);
 				self.game.backgroundColor = '#a4a4a4';
-				self.game.border = '24px red solid';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
@@ -216,7 +208,6 @@
 				self.check_endgame ();
 				self.get_curcell ();
 				if (self.mouse.tapped) {
-					var lc = len (self.clickedcells);
 					self.clickedcells.append (self.curcell);
 					self.mouse.tapped = false;
 					self.compare_cells ();
@@ -240,7 +231,6 @@
 			__all__.all = all;
 			__all__.allcolors = allcolors;
 			__all__.colors = colors;
-			__all__.counter = counter;
 			__all__.memory = memory;
 		__pragma__ ('</all>')
 	}) ();

@@ -11,6 +11,7 @@ from colors import standard
 
 colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  standard]
 
+# 'opov directive allows + and * operators on list '
 __pragma__ ('opov')
 allcolors = colors * 2
 __pragma__ ('noopov')
@@ -70,7 +71,6 @@ class Memory:
         # Initialisation of the Game 
         self.game = hexi(width, height, self.setup)
         self.game.backgroundColor = "#a4a4a4"
-        self.game.border = "24px red solid";
         self.mouse = self.game.pointer
         self.mouse.tap = self.tap
         self.grid = Grid(self.game)
@@ -145,7 +145,6 @@ class Memory:
         self.get_curcell()
 
         if self.mouse.tapped: 
-            lc = len(self.clickedcells)
             self.clickedcells.append(self.curcell)           
             self.mouse.tapped = False
             self.compare_cells()

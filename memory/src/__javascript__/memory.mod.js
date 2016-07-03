@@ -1,36 +1,33 @@
 	(function () {
+		var __symbols__ = [];
+		var standard = __init__ (__world__.colors).standard;
 		var colors = function () {
 			var __accu0__ = [];
-			var __iter0__ = list ([tuple ([0, 0, 0]), tuple ([0, 0, 255]), tuple ([0, 255, 0]), tuple ([0, 255, 255]), tuple ([255, 0, 0]), tuple ([255, 0, 255]), tuple ([255, 255, 0]), tuple ([255, 255, 255])]);
-			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-				var color = __iter0__ [__index0__];
+			var __iterable0__ = standard;
+			for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+				var color = __iterable0__ [__index0__];
 				__accu0__.append (JS.rgb2hex ('rgba({}, 0)'.format (color)));
 			}
 			return __accu0__;
 		} ();
-		var allcolors = function () {
-			var __accu0__ = [];
-			var __iter0__ = zip (colors, colors);
-			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-				var tuplecolor = __iter0__ [__index0__];
-				var __iter1__ = tuplecolor;
-				for (var __index1__ = 0; __index1__ < __iter1__.length; __index1__++) {
-					var color = __iter1__ [__index1__];
-					__accu0__.append (color);
-				}
-			}
-			return __accu0__;
-		} ();
+		var allcolors = __mul__ (colors, 2);
 		JS.shuffle (allcolors);
 		var all = function (iterable) {
-			var __iter0__ = iterable;
-			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-				var element = __iter0__ [__index0__];
+			var __iterable0__ = iterable;
+			for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+				var element = __iterable0__ [__index0__];
 				if (!(element)) {
 					return false;
 				}
 			}
 			return true;
+		};
+		var counter = function* () {
+			var i = 0;
+			while (true) {
+				i++;
+				yield i;
+			}
 		};
 		var Grid = __class__ ('Grid', [object], {
 			get __init__ () {return __get__ (this, function (self, game, rows, cols) {
@@ -76,9 +73,9 @@
 				var cells = range (16);
 				JS.shuffle (cells);
 				JS.shuffle (colors);
-				var __iter0__ = cells;
-				for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-					var num = __iter0__ [__index0__];
+				var __iterable0__ = cells;
+				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+					var num = __iterable0__ [__index0__];
 					var color = allcolors [num];
 					var __left0__ = tuple ([num % self.cols, Math.floor (num / self.rows)]);
 					var i = __left0__ [0];
@@ -92,7 +89,7 @@
 					sprite.num = num;
 					sprite.content = color;
 					sprite.showed = false;
-					var rectb = self.game.rectangle (128, 128, 'lightGray');
+					var rectb = self.game.rectangle (128, 128, 'white');
 					rectb.x = posx;
 					rectb.y = posy;
 					rectb.num = num;
@@ -110,7 +107,8 @@
 					var height = 524;
 				};
 				self.game = hexi (width, height, self.setup);
-				self.game.backgroundColor = 'seaGreen';
+				self.game.backgroundColor = '#a4a4a4';
+				self.game.border = '24px red solid';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
@@ -181,21 +179,21 @@
 			});},
 			get check_endgame () {return __get__ (this, function (self) {
 				var endgame = function () {
-					var __iter0__ = lst_spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var s = __iter0__ [__index0__];
+					var __iterable0__ = lst_spr;
+					for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						var s = __iterable0__ [__index0__];
 						s.alpha = 0;
 					}
 					self.game.state = self.end;
 				};
 				var lst_spr = function () {
 					var __accu0__ = [];
-					var __iter0__ = self.grid.spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var liste_sprites = __iter0__ [__index0__];
-						var __iter1__ = liste_sprites;
-						for (var __index1__ = 0; __index1__ < __iter1__.length; __index1__++) {
-							var sprite = __iter1__ [__index1__];
+					var __iterable0__ = self.grid.spr;
+					for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						var liste_sprites = __iterable0__ [__index0__];
+						var __iterable1__ = liste_sprites;
+						for (var __index1__ = 0; __index1__ < __iterable1__.length; __index1__++) {
+							var sprite = __iterable1__ [__index1__];
 							__accu0__.append (sprite);
 						}
 					}
@@ -203,9 +201,9 @@
 				} ();
 				var showed_values = function () {
 					var __accu0__ = [];
-					var __iter0__ = lst_spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var s = __iter0__ [__index0__];
+					var __iterable0__ = lst_spr;
+					for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						var s = __iterable0__ [__index0__];
 						__accu0__.append (s.showed);
 					}
 					return __accu0__;
@@ -233,12 +231,16 @@
 		});
 		var memory = Memory ();
 		memory.start ();
+		__pragma__ ('<use>' +
+			'colors' +
+		'</use>')
 		__pragma__ ('<all>')
 			__all__.Grid = Grid;
 			__all__.Memory = Memory;
 			__all__.all = all;
 			__all__.allcolors = allcolors;
 			__all__.colors = colors;
+			__all__.counter = counter;
 			__all__.memory = memory;
 		__pragma__ ('</all>')
 	}) ();

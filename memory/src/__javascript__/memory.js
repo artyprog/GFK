@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-06-28 18:56:52
+// Transcrypt'ed from Python, 2016-07-03 16:02:02
 function memory () {
 	var __all__ = {};
 	var __world__ = __all__;
@@ -145,7 +145,7 @@ function memory () {
 					var __Envir__ = __class__ ('__Envir__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.5.193';
+							self.transpiler_version = '3.5.196';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -269,9 +269,9 @@ function memory () {
 					var map = function (func, iterable) {
 						return function () {
 							var __accu0__ = [];
-							var __iter0__ = iterable;
-							for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-								var item = __iter0__ [__index0__];
+							var __iterable0__ = iterable;
+							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								var item = __iterable0__ [__index0__];
 								__accu0__.append (func (item));
 							}
 							return __accu0__;
@@ -280,9 +280,9 @@ function memory () {
 					var filter = function (func, iterable) {
 						return function () {
 							var __accu0__ = [];
-							var __iter0__ = iterable;
-							for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-								var item = __iter0__ [__index0__];
+							var __iterable0__ = iterable;
+							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								var item = __iterable0__ [__index0__];
 								if (func (item)) {
 									__accu0__.append (item);
 								}
@@ -292,7 +292,12 @@ function memory () {
 					};
 					var __Terminal__ = __class__ ('__Terminal__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
-							self.element = document.getElementById ('__terminal__');
+							try {
+								self.element = document.getElementById ('__terminal__');
+							}
+							catch (__except__) {
+								self.element = null;
+							}
 							if (self.element) {
 								self.buffer = '';
 								self.element.style.overflowX = 'auto';
@@ -320,9 +325,9 @@ function memory () {
 							if (self.element) {
 								self.buffer = '{}{}{}'.format (self.buffer, sep.join (function () {
 									var __accu0__ = [];
-									var __iter0__ = args;
-									for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-										var arg = __iter0__ [__index0__];
+									var __iterable0__ = args;
+									for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+										var arg = __iterable0__ [__index0__];
 										__accu0__.append (str (arg));
 									}
 									return __accu0__;
@@ -348,7 +353,12 @@ function memory () {
 								}
 							}
 							self.print ('{}_'.format (question), __kwargdict__ ({end: ''}));
-							var answer = window.prompt (question);
+							try {
+								var answer = window.prompt (question);
+							}
+							catch (__except__) {
+								console.log ('Error: Blocking input not yet implemented outside browser');
+							}
 							self.buffer = self.buffer.__getslice__ (0, -(1), 1);
 							self.print (answer);
 							return answer;
@@ -566,7 +576,13 @@ function memory () {
 			}
 			return false;
 		}
-		return isA (anObject.__class__)
+		try {
+			return '__class__' in anObject ? isA (anObject.__class__) : anObject instanceof classinfo;
+		}
+		catch (exception) {
+			console.log (exception);
+			console.dir (anObject);
+		}
 	};
 	__all__.isinstance = isinstance;
 	
@@ -652,13 +668,115 @@ function memory () {
 	// Absolute value
 	var abs = Math.abs;
 	__all__.abs = abs;
+				
+	// Iterator protocol functions
+	
+	function py_StopIteration () {
+		name = 'StopIteration';
+		message = 'Iterator exhausted';
+	};
+	
+	__all__.py_StopIteration = py_StopIteration;
+	
+	function wrap_py_next () {		// Add as 'next' method to make Python iterator JavaScript compatible
+		var result = this.__next__ ();
+		return {value: result, done: result == 'undefined'};		
+	}
+	
+	function wrap_js_next () {		// Add as '__next__' method to make JavaScript iterator Python compatible
+		var result = this.next ();
+		if (result.done) {
+			throw new py_StopIteration ();
+		}
+		else {
+			return result.value;
+		}
+	}
+	
+	function py_iter (iterable) {	// Produces universal iterator with Python '__next__' as well as JavaScript 'next'
+		if ('__iter__' in iterable) {	// It's a Python iterable (incl. JavaScript Arrays and strings)
+			var iterator = iterable.__iter__ ();
+			iterator.next = wrap_py_next;
+			return iterator;
+		}
+		else if ('selector' in iterable) { // Assume it's a JQuery iterator
+			var iterator = list (iterable) .__iter__ ();
+			iterator.next = wrap_py_next;
+			return iterator;
+		}
+		else if ('next' in iterable) {	// It's a JavaScript generator
+			// It should have an iterator field, but doesn't in Chrome
+			// So we just return the generator itself, which is both an iterable and an iterator
+			iterable.__next__ = wrap_js_next;
+			return iterable;
+		}
+		else {
+			return null;
+		}
+	}
+	__all__.py_iter = py_iter;
+	
+	function py_next (iterator) {				// Called only in a Python context, could receive Python or JavaScript iterator
+		try {									// Primarily assume Python iterator, for max speed
+			var result = iterator.__next__ ();
+		}
+		catch (exception) {						// JavaScript iterators are the exception here
+			var result = iterator.next ();
+			if (result.done) {
+				throw new py_StopIteration ();
+			}
+			else {
+				return result.value;
+			}
+		}	
+		if (typeof result == 'undefined') {
+			throw new py_StopIteration ();
+		}
+		return result;
+	}
+	__all__.py_next = py_next;
+	
+	function __SeqIterator__ (iterable) {
+		this.iterable = iterable;
+		this.index = 0;
+	}
+	
+	__all__.__SeqIterator__ = __SeqIterator__;
+	
+	__SeqIterator__.prototype.__iter__ = function () {
+		return this;
+	}
+	
+	__SeqIterator__.prototype.__next__ = function () {
+		return this.iterable [this.index++];
+	}
+	
+	__SeqIterator__.prototype.next = wrap_py_next;
+	
+	function __KeyIterator__ (iterable) {
+		this.iterable = iterable;
+		this.index = 0;
+	}
+
+	__all__.__KeyIterator__ = __KeyIterator__;
+	
+	__KeyIterator__.prototype.__iter__ = function () {
+		return this;
+	}
+	
+	__KeyIterator__.prototype.__next__ = function () {
+		return this.iterable.keys () [this.index++];
+	}
+			
+	__KeyIterator__.prototype.next = wrap_py_next;
 	
 	// Reversed function for arrays
-	var reversed = function (iterable) {
+	var py_reversed = function (iterable) {
 		iterable = iterable.slice ();
 		iterable.reverse ();
 		return iterable;
 	}
+	__all__.py_reversed = py_reversed;
 	
 	// Zip method for arrays
 	var zip = function () {
@@ -751,6 +869,10 @@ function memory () {
 	__all__.list = list;
 	Array.prototype.__class__ = list;	// All arrays are lists (not only if constructed by the list ctor), unless constructed otherwise
 	list.__name__ = 'list';
+	
+	Array.prototype.__iter__ = function () {
+		return new __SeqIterator__ (this);
+	}
 	
 	Array.prototype.__getslice__ = function (start, stop, step) {
 		if (start < 0) {
@@ -1057,6 +1179,10 @@ function memory () {
 	
 	// Dict extensions to object
 	
+	function __keyIterator__ () {
+		return new __KeyIterator__ (this);
+	}
+	
 	function __keys__ () {
 		var keys = []
 		for (var attrib in this) {
@@ -1066,7 +1192,6 @@ function memory () {
 		}
 		return keys;
 	}
-	__all__.__keys__ = __keys__;
 		
 	function __items__ () {
 		var items = []
@@ -1077,19 +1202,16 @@ function memory () {
 		}
 		return items;
 	}
-	__all__.__items__ = __items__;
 		
 	function __del__ (key) {
 		delete this [key];
 	}
-	__all__.__del__ = __del__;
 	
 	function __clear__ () {
 		for (var attrib in this) {
 			delete this [attrib];
 		}
 	}
-	__all__.__clear__ = __clear__;
 		
 	function dict (objectOrPairs) {
 		if (!objectOrPairs || objectOrPairs instanceof Array) {	// It's undefined or an array of pairs
@@ -1110,7 +1232,8 @@ function memory () {
 		// Some JavaScript libraries call all enumerable callable properties of an object that's passed to them
 		// So the properties of a dict should be non-enumerable
 		Object.defineProperty (instance, '__class__', {value: dict, enumerable: false, writable: true});
-		Object.defineProperty (instance, 'keys', {value: __keys__, enumerable: false});			
+		Object.defineProperty (instance, 'keys', {value: __keys__, enumerable: false});
+		Object.defineProperty (instance, '__iter__', {value: __keyIterator__, enumerable: false});
 		Object.defineProperty (instance, 'items', {value: __items__, enumerable: false});		
 		Object.defineProperty (instance, 'del', {value: __del__, enumerable: false});
 		Object.defineProperty (instance, 'clear', {value: __clear__, enumerable: false});
@@ -1121,7 +1244,7 @@ function memory () {
 	dict.__name__ = 'dict';
 	
 	// String extensions
-		
+	
 	function str (stringable) {
 		try {
 			return stringable.__str__ ();
@@ -1135,6 +1258,10 @@ function memory () {
 	String.prototype.__class__ = str;	// All strings are str
 	str.__name__ = 'str';
 	
+	String.prototype.__iter__ = function () {
+		return new __SeqIterator__ (this);
+	}
+		
 	String.prototype.__repr__ = function () {
 		return (this.indexOf ('\'') == -1 ? '\'' + this + '\'' : '"' + this + '"') .replace ('\n', '\\n');
 	};
@@ -1460,39 +1587,82 @@ function memory () {
 	};
 	__all__.__call__ = __call__;
 
+	__nest__ (
+		__all__,
+		'colors', {
+			__all__: {
+				__inited__: false,
+				__init__: function (__all__) {
+					var american_rose = tuple ([255, 3, 62, 0.506]);
+					var amethyst = tuple ([153, 102, 204, 0.6]);
+					var azure = tuple ([0, 127, 255, 0.5]);
+					var antique_fushia = tuple ([145, 92, 131, 0.465]);
+					var blue = tuple ([255, 0, 0, 0.5]);
+					var yellow = tuple ([255, 246, 0, 0.5]);
+					var chartreuse = tuple ([127, 255, 0, 0.5]);
+					var international_orange = tuple ([255, 79, 207, 0.561]);
+					var vivid = list ([amethyst, american_rose, azure, antique_fushia, blue, yellow, chartreuse, international_orange]);
+					var red = tuple ([255, 0, 0, 1.0]);
+					var cyan = tuple ([0, 255, 255, 1.0]);
+					var yellow = tuple ([255, 255, 0, 1.0]);
+					var green = tuple ([0, 255, 0, 1.0]);
+					var blue = tuple ([0, 0, 255, 1.0]);
+					var hollywood_cerise = tuple ([255, 0, 255, 1.0]);
+					var purple = tuple ([120, 24, 74, 1.0]);
+					var arylide_yellow = tuple ([233, 214, 107, 1.0]);
+					var standard = list ([red, cyan, yellow, green, blue, hollywood_cerise, purple, arylide_yellow]);
+					__pragma__ ('<all>')
+						__all__.american_rose = american_rose;
+						__all__.amethyst = amethyst;
+						__all__.antique_fushia = antique_fushia;
+						__all__.arylide_yellow = arylide_yellow;
+						__all__.azure = azure;
+						__all__.blue = blue;
+						__all__.chartreuse = chartreuse;
+						__all__.cyan = cyan;
+						__all__.green = green;
+						__all__.hollywood_cerise = hollywood_cerise;
+						__all__.international_orange = international_orange;
+						__all__.purple = purple;
+						__all__.red = red;
+						__all__.standard = standard;
+						__all__.vivid = vivid;
+						__all__.yellow = yellow;
+					__pragma__ ('</all>')
+				}
+			}
+		}
+	);
 	(function () {
+		var __symbols__ = [];
+		var standard = __init__ (__world__.colors).standard;
 		var colors = function () {
 			var __accu0__ = [];
-			var __iter0__ = list ([tuple ([0, 0, 0]), tuple ([0, 0, 255]), tuple ([0, 255, 0]), tuple ([0, 255, 255]), tuple ([255, 0, 0]), tuple ([255, 0, 255]), tuple ([255, 255, 0]), tuple ([255, 255, 255])]);
-			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-				var color = __iter0__ [__index0__];
+			var __iterable0__ = standard;
+			for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+				var color = __iterable0__ [__index0__];
 				__accu0__.append (JS.rgb2hex ('rgba({}, 0)'.format (color)));
 			}
 			return __accu0__;
 		} ();
-		var allcolors = function () {
-			var __accu0__ = [];
-			var __iter0__ = zip (colors, colors);
-			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-				var tuplecolor = __iter0__ [__index0__];
-				var __iter1__ = tuplecolor;
-				for (var __index1__ = 0; __index1__ < __iter1__.length; __index1__++) {
-					var color = __iter1__ [__index1__];
-					__accu0__.append (color);
-				}
-			}
-			return __accu0__;
-		} ();
+		var allcolors = __mul__ (colors, 2);
 		JS.shuffle (allcolors);
 		var all = function (iterable) {
-			var __iter0__ = iterable;
-			for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-				var element = __iter0__ [__index0__];
+			var __iterable0__ = iterable;
+			for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+				var element = __iterable0__ [__index0__];
 				if (!(element)) {
 					return false;
 				}
 			}
 			return true;
+		};
+		var counter = function* () {
+			var i = 0;
+			while (true) {
+				i++;
+				yield i;
+			}
 		};
 		var Grid = __class__ ('Grid', [object], {
 			get __init__ () {return __get__ (this, function (self, game, rows, cols) {
@@ -1538,9 +1708,9 @@ function memory () {
 				var cells = range (16);
 				JS.shuffle (cells);
 				JS.shuffle (colors);
-				var __iter0__ = cells;
-				for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-					var num = __iter0__ [__index0__];
+				var __iterable0__ = cells;
+				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+					var num = __iterable0__ [__index0__];
 					var color = allcolors [num];
 					var __left0__ = tuple ([num % self.cols, Math.floor (num / self.rows)]);
 					var i = __left0__ [0];
@@ -1554,7 +1724,7 @@ function memory () {
 					sprite.num = num;
 					sprite.content = color;
 					sprite.showed = false;
-					var rectb = self.game.rectangle (128, 128, 'lightGray');
+					var rectb = self.game.rectangle (128, 128, 'white');
 					rectb.x = posx;
 					rectb.y = posy;
 					rectb.num = num;
@@ -1572,7 +1742,8 @@ function memory () {
 					var height = 524;
 				};
 				self.game = hexi (width, height, self.setup);
-				self.game.backgroundColor = 'seaGreen';
+				self.game.backgroundColor = '#a4a4a4';
+				self.game.border = '24px red solid';
 				self.mouse = self.game.pointer;
 				self.mouse.tap = self.tap;
 				self.grid = Grid (self.game);
@@ -1643,21 +1814,21 @@ function memory () {
 			});},
 			get check_endgame () {return __get__ (this, function (self) {
 				var endgame = function () {
-					var __iter0__ = lst_spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var s = __iter0__ [__index0__];
+					var __iterable0__ = lst_spr;
+					for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						var s = __iterable0__ [__index0__];
 						s.alpha = 0;
 					}
 					self.game.state = self.end;
 				};
 				var lst_spr = function () {
 					var __accu0__ = [];
-					var __iter0__ = self.grid.spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var liste_sprites = __iter0__ [__index0__];
-						var __iter1__ = liste_sprites;
-						for (var __index1__ = 0; __index1__ < __iter1__.length; __index1__++) {
-							var sprite = __iter1__ [__index1__];
+					var __iterable0__ = self.grid.spr;
+					for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						var liste_sprites = __iterable0__ [__index0__];
+						var __iterable1__ = liste_sprites;
+						for (var __index1__ = 0; __index1__ < __iterable1__.length; __index1__++) {
+							var sprite = __iterable1__ [__index1__];
 							__accu0__.append (sprite);
 						}
 					}
@@ -1665,9 +1836,9 @@ function memory () {
 				} ();
 				var showed_values = function () {
 					var __accu0__ = [];
-					var __iter0__ = lst_spr;
-					for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-						var s = __iter0__ [__index0__];
+					var __iterable0__ = lst_spr;
+					for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						var s = __iterable0__ [__index0__];
 						__accu0__.append (s.showed);
 					}
 					return __accu0__;
@@ -1695,12 +1866,16 @@ function memory () {
 		});
 		var memory = Memory ();
 		memory.start ();
+		__pragma__ ('<use>' +
+			'colors' +
+		'</use>')
 		__pragma__ ('<all>')
 			__all__.Grid = Grid;
 			__all__.Memory = Memory;
 			__all__.all = all;
 			__all__.allcolors = allcolors;
 			__all__.colors = colors;
+			__all__.counter = counter;
 			__all__.memory = memory;
 		__pragma__ ('</all>')
 	}) ();

@@ -7,19 +7,13 @@
 
 # This file is translated to Javascript using Transcrypt
 
-colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  [
-    (0, 0, 0),
-    (0, 0, 255),
-    (0, 255, 0),
-    (0, 255, 255),
-    (255, 0, 0),
-    (255, 0, 255),
-    (255, 255, 0),
-    (255, 255, 255)
-]]
+from colors import standard
 
-# Future version of Transcrypt will allow [allcolors] * 2
-allcolors = [color for tuplecolor in zip(colors, colors) for color in tuplecolor]
+colors = [JS.rgb2hex("rgba({}, 0)".format (color)) for color in  standard]
+
+__pragma__ ('opov')
+allcolors = colors * 2
+__pragma__ ('noopov')
 
 # JS.* -> Javascript Functions
 JS.shuffle(allcolors)
@@ -30,6 +24,13 @@ def all(iterable):
         if not element:
             return False
     return True
+
+def counter():
+    i = 0
+    while True:
+        i += 1
+        yield i
+
 
 # Main Grid wich contents all the cells
 # Grille principale contenant les cellules
@@ -61,7 +62,7 @@ class Grid:
             sprite.showed = False
 
             # Backface (Thanks JdeH)
-            rectb = self.game.rectangle(128, 128, "lightGray")
+            rectb = self.game.rectangle(128, 128, "white")
             rectb.x = posx
             rectb.y = posy
             rectb.num = num
@@ -75,7 +76,8 @@ class Memory:
     def __init__(self, width=524, height=524):
         # Initialisation of the Game 
         self.game = hexi(width, height, self.setup)
-        self.game.backgroundColor = "seaGreen"
+        self.game.backgroundColor = "#a4a4a4"
+        self.game.border = "24px red solid";
         self.mouse = self.game.pointer
         self.mouse.tap = self.tap
         self.grid = Grid(self.game)

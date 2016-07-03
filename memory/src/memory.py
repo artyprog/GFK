@@ -25,13 +25,6 @@ def all(iterable):
             return False
     return True
 
-def counter():
-    i = 0
-    while True:
-        i += 1
-        yield i
-
-
 # Main Grid wich contents all the cells
 # Grille principale contenant les cellules
 class Grid:

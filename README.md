@@ -1,6 +1,8 @@
 
 # GFK...  
 
+[![Join the chat at https://gitter.im/artyprog/GFK](https://badges.gitter.im/artyprog/GFK.svg)](https://gitter.im/artyprog/GFK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Games for Kids written with [Hexi](https://github.com/kittykatattack/hexi) and [Transcrypt](http://transcrypt.org/)  
 
 Big Thanks to Jacques de Hooge for Transcrypt and Rex van der Spuy for Hexi
